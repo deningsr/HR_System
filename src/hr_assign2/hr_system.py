@@ -32,3 +32,27 @@ def add_new_emp(
         "End Date": end_date,
     }
     return employees
+
+
+add_new_emp(
+    "Denin",
+    "Grcic",
+    "123 3rd St",
+    "Seattle",
+    "WA",
+    98115,
+    123445678,
+    "09-23-1992",
+    "Developer",
+    "04-21-2021",
+)
+
+
+def save_emps_to_disk():
+    file = open("employees.csv", "w")
+    writer = csv.writer(file)
+    for key, value in employees.items():
+        writer.writerow([key, value])
+
+
+save_emps_to_disk()
