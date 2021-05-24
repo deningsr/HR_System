@@ -1,8 +1,6 @@
 import uuid
 import csv
 
-employees = dict()
-
 
 def add_new_emp(
     first_nane,
@@ -17,8 +15,10 @@ def add_new_emp(
     hire_date,
     end_date="N/A",
 ):
+    employees = dict()
     emp_id = str(uuid.uuid4().fields[-1])[:5]
-    employees[emp_id] = {
+    employees = {
+        "ID": emp_id,
         "First Name": first_nane,
         "Last Name": last_name,
         "Address": address,
@@ -31,7 +31,12 @@ def add_new_emp(
         "Hire Date": hire_date,
         "End Date": end_date,
     }
-    return employees
+    with open("employees.csv", "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(employees)
+        writer.writerow(employees.values())
+        # for key, value in employees.items():
+        #     writer.writerow([key, value])
 
 
 add_new_emp(
@@ -46,13 +51,3 @@ add_new_emp(
     "Developer",
     "04-21-2021",
 )
-
-
-def save_emps_to_disk():
-    file = open("employees.csv", "w")
-    writer = csv.writer(file)
-    for key, value in employees.items():
-        writer.writerow([key, value])
-
-
-save_emps_to_disk()
