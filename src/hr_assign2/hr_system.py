@@ -31,17 +31,29 @@ def add_new_emp(
         "Hire Date": hire_date,
         "End Date": end_date,
     }
-    with open("employees.csv", "w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow(employees)
-        writer.writerow(employees.values())
-        # for key, value in employees.items():
-        #     writer.writerow([key, value])
+    with open("employees.csv", "a+", newline="") as file:
+        field_names = [emp for emp in employees]
+        dict_writer = csv.DictWriter(file, fieldnames=field_names)
+        dict_writer.writeheader()
+        dict_writer.writerow(employees)
 
 
 add_new_emp(
     "Denin",
     "Grcic",
+    "123 3rd St",
+    "Seattle",
+    "WA",
+    98115,
+    123445678,
+    "09-23-1992",
+    "Developer",
+    "04-21-2021",
+)
+
+add_new_emp(
+    "Will",
+    "Smith",
     "123 3rd St",
     "Seattle",
     "WA",
