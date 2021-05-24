@@ -38,28 +38,13 @@ def add_new_emp(
         dict_writer.writerow(employees)
 
 
-add_new_emp(
-    "Denin",
-    "Grcic",
-    "123 3rd St",
-    "Seattle",
-    "WA",
-    98115,
-    123445678,
-    "09-23-1992",
-    "Developer",
-    "04-21-2021",
-)
+def update_emp(filename, ID):
+    with open(filename, newline="") as file:
+        readData = [row for row in csv.DictReader(file)]
+        # print(readData)
+        for row in readData:
+            if row["ID"] == ID:
+                print(row)
 
-add_new_emp(
-    "Will",
-    "Smith",
-    "123 3rd St",
-    "Seattle",
-    "WA",
-    98115,
-    123445678,
-    "09-23-1992",
-    "Developer",
-    "04-21-2021",
-)
+
+update_emp("employees.csv", "49225")
