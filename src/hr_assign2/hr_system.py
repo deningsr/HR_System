@@ -20,6 +20,12 @@ def add_new_emp(
     parsed_hire_date = datetime.datetime(
         year=int(hire_date[6:10]), month=int(hire_date[1]), day=int(hire_date[3:5])
     )
+    parsed_end_date = datetime.datetime(
+        year=int(end_date[6:10]), month=int(end_date[1]), day=int(end_date[3:5])
+    )
+    parsed_dob = datetime.datetime(
+        year=int(dob[6:10]), month=int(dob[1]), day=int(dob[3:5])
+    )
     employees = dict()
     emp_id = str(uuid.uuid4().fields[-1])[:5]
     employees = {
@@ -31,10 +37,10 @@ def add_new_emp(
         "State": state,
         "Zip": zipcode,
         "SSN": ssn,
-        "DOB": dob,
+        "DOB": parsed_dob,
         "Job Title": job_title,
         "Hire Date": parsed_hire_date,
-        "End Date": end_date,
+        "End Date": parsed_end_date,
     }
     file_exists = os.path.isfile("employees.csv")
     with open("employees.csv", "a+", newline="") as file:
@@ -55,6 +61,18 @@ def update_emp(filename, ID, **kwargs):
                 row[kwargs] = kwargs
 
 
+def create_current_emp_report():
+    with open("employees.csv", newline="") as file:
+        readData = [row for row in csv.DictReader(file)]
+        sorted_list = []
+        for row in readData:
+            if row["Hire Date"] <= row["End Date"]:
+                print("Employee " + row["First Name"] + " is still employed")
+                sorted_list.append(row)
+        sortedlist = sorted(sorted_list, key=lambda row: row["ID"], reverse=True)
+        print(sortedlist)
+
+
 add_new_emp(
     "Denin",
     "Grcic",
@@ -66,6 +84,7 @@ add_new_emp(
     "09-23-1992",
     "Developer",
     "04-21-2021",
+    "05-20-2024",
 )
 
 add_new_emp(
@@ -79,6 +98,35 @@ add_new_emp(
     "09-23-1992",
     "Developer",
     "04-21-2021",
+    "05-12-2022",
 )
 
+add_new_emp(
+    "Polly",
+    "Moon",
+    "123 3rd St",
+    "Seattle",
+    "WA",
+    98115,
+    123445678,
+    "09-23-1992",
+    "Developer",
+    "04-21-2021",
+    "05-12-2040",
+)
+
+add_new_emp(
+    "Peter",
+    "Griffin",
+    "123 3rd St",
+    "Seattle",
+    "WA",
+    98115,
+    123445678,
+    "09-23-1992",
+    "Developer",
+    "04-21-2021",
+    "05-12-2025",
+)
+create_current_emp_report()
 update_emp("employees.csv", "49225")
