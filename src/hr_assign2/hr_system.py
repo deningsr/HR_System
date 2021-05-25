@@ -1,5 +1,6 @@
 import uuid
 import csv
+import os.path
 
 
 def add_new_emp(
@@ -31,10 +32,12 @@ def add_new_emp(
         "Hire Date": hire_date,
         "End Date": end_date,
     }
+    file_exists = os.path.isfile("employees.csv")
     with open("employees.csv", "a+", newline="") as file:
         field_names = [emp for emp in employees]
         dict_writer = csv.DictWriter(file, fieldnames=field_names)
-        dict_writer.writeheader()
+        if not file_exists:
+            dict_writer.writeheader()
         dict_writer.writerow(employees)
 
 
