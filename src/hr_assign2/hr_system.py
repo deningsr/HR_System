@@ -64,13 +64,26 @@ def update_emp(filename, ID, **kwargs):
 def create_current_emp_report():
     with open("employees.csv", newline="") as file:
         readData = [row for row in csv.DictReader(file)]
+
         sorted_list = []
         for row in readData:
             if row["Hire Date"] <= row["End Date"]:
-                print("Employee " + row["First Name"] + " is still employed")
                 sorted_list.append(row)
         sortedlist = sorted(sorted_list, key=lambda row: row["ID"], reverse=True)
-        print(sortedlist)
+        print("Currently employed employees:")
+        print(
+            "{:20} {:>15} {:>20}".format(
+                "ID",
+                "First Name",
+                "Last Name",
+            )
+        )
+        for key in sortedlist:
+            print(
+                "{:20} {:>15} {:>20}".format(
+                    key["ID"], key["First Name"], key["Last Name"]
+                )
+            )
 
 
 add_new_emp(
