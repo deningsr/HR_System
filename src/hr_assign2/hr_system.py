@@ -3,6 +3,18 @@ import csv
 import os.path
 import datetime
 
+menu = "\n".join(
+    (
+        "Welcome to the HR System!",
+        "Please choose from below options (1/2/3/4):",
+        "1 - Add a New Employee",
+        "2 - Update an Employee Record",
+        "3 - See All Current Employed Employees",
+        "4 - quit",
+        ">>> ",
+    )
+)
+
 
 def add_new_emp(
     first_nane,
@@ -86,6 +98,36 @@ def create_current_emp_report():
             )
 
 
+def create_recent_departure_report():
+    with open("employees.csv", newline="") as file:
+        readData = [row for row in csv.DictReader(file)]
+        sorted_list = []
+        for row in readData:
+            parsed_hire_date = datetime.datetime(
+                year=int(row["Hire Date"][6:10]),
+                month=int(row["Hire Date"][1]),
+                day=int(row["Hire Date"][3:5]),
+            )
+            past_date = parsed_hire_date + datetime.timedelta(days=-31)
+
+            if row["Hire Date"] >= past_date:
+                sorted_list.append(row)
+        sortedlist = sorted(sorted_list, key=lambda row: row["ID"], reverse=True)
+        print(
+            "{:20} {:>15} {:>20}".format(
+                "ID",
+                "First Name",
+                "Last Name",
+            )
+        )
+        for key in sortedlist:
+            print(
+                "{:20} {:>15} {:>20}".format(
+                    key["ID"], key["First Name"], key["Last Name"]
+                )
+            )
+
+
 add_new_emp(
     "Denin",
     "Grcic",
@@ -97,7 +139,7 @@ add_new_emp(
     "09-23-1992",
     "Developer",
     "04-21-2021",
-    "05-20-2024",
+    "05-20-2021",
 )
 
 add_new_emp(
@@ -111,7 +153,7 @@ add_new_emp(
     "09-23-1992",
     "Developer",
     "04-21-2021",
-    "05-12-2022",
+    "05-12-2021",
 )
 
 add_new_emp(
@@ -141,5 +183,6 @@ add_new_emp(
     "04-21-2021",
     "05-12-2025",
 )
-create_current_emp_report()
+# create_current_emp_report()
+create_recent_departure_report()
 update_emp("employees.csv", "49225")
