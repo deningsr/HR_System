@@ -16,19 +16,65 @@ menu = "\n".join(
 )
 
 
-def add_new_emp(
-    first_nane,
-    last_name,
-    address,
-    city,
-    state,
-    zipcode,
-    ssn,
-    dob,
-    job_title,
-    hire_date,
-    end_date="N/A",
-):
+def add_new_emp():
+    while True:
+        try:
+            first_nane = str(input("Enter First Name: "))
+        except ValueError:
+            print("Please enter a name")
+            continue
+        try:
+            last_name = str(input("Enter Last Name: "))
+        except ValueError:
+            print("Please enter a name")
+            continue
+        try:
+            address = str(input("Enter Address: "))
+        except ValueError:
+            print("Please enter an Address")
+            continue
+        try:
+            city = str(input("Enter a City: "))
+        except ValueError:
+            print("Please enter a name")
+            continue
+        try:
+            state = str(input("Enter State Abb: "))
+        except ValueError:
+            print("Please enter a State")
+            continue
+        try:
+            zipcode = str(input("Enter zipcode: "))
+        except ValueError:
+            print("Please enter a zipcode")
+            continue
+        try:
+            ssn = str(input("Enter SSN: "))
+        except ValueError:
+            print("Please enter a SSN")
+            continue
+        try:
+            dob = str(input("Enter DOB (MM-DD-YYYY): "))
+        except ValueError:
+            print("Please enter a date")
+            continue
+        try:
+            job_title = str(input("Enter a Job Title: "))
+        except ValueError:
+            print("Please enter a title")
+            continue
+        try:
+            hire_date = str(input("Enter Hire Date (MM-DD-YYYY): "))
+        except ValueError:
+            print("Please enter a date")
+            continue
+        try:
+            end_date = str(input("Enter DOB (MM-DD-YYYY): "))
+        except ValueError:
+            print("Please enter a date")
+            continue
+        else:
+            break
     parsed_hire_date = datetime.datetime(
         year=int(hire_date[6:10]), month=int(hire_date[1]), day=int(hire_date[3:5])
     )
@@ -128,61 +174,83 @@ def create_recent_departure_report():
             )
 
 
-add_new_emp(
-    "Denin",
-    "Grcic",
-    "123 3rd St",
-    "Seattle",
-    "WA",
-    98115,
-    123445678,
-    "09-23-1992",
-    "Developer",
-    "04-21-2021",
-    "05-20-2021",
-)
+# add_new_emp(
+#     "Denin",
+#     "Grcic",
+#     "123 3rd St",
+#     "Seattle",
+#     "WA",
+#     98115,
+#     123445678,
+#     "09-23-1992",
+#     "Developer",
+#     "04-21-2021",
+#     "05-20-2021",
+# )
 
-add_new_emp(
-    "Will",
-    "Smith",
-    "123 3rd St",
-    "Seattle",
-    "WA",
-    98115,
-    123445678,
-    "09-23-1992",
-    "Developer",
-    "04-21-2021",
-    "05-12-2021",
-)
+# add_new_emp(
+#     "Will",
+#     "Smith",
+#     "123 3rd St",
+#     "Seattle",
+#     "WA",
+#     98115,
+#     123445678,
+#     "09-23-1992",
+#     "Developer",
+#     "04-21-2021",
+#     "05-12-2021",
+# )
 
-add_new_emp(
-    "Polly",
-    "Moon",
-    "123 3rd St",
-    "Seattle",
-    "WA",
-    98115,
-    123445678,
-    "09-23-1992",
-    "Developer",
-    "04-21-2021",
-    "05-12-2040",
-)
+# add_new_emp(
+#     "Polly",
+#     "Moon",
+#     "123 3rd St",
+#     "Seattle",
+#     "WA",
+#     98115,
+#     123445678,
+#     "09-23-1992",
+#     "Developer",
+#     "04-21-2021",
+#     "05-12-2040",
+# )
 
-add_new_emp(
-    "Peter",
-    "Griffin",
-    "123 3rd St",
-    "Seattle",
-    "WA",
-    98115,
-    123445678,
-    "09-23-1992",
-    "Developer",
-    "04-21-2021",
-    "05-12-2025",
-)
+# add_new_emp(
+#     "Peter",
+#     "Griffin",
+#     "123 3rd St",
+#     "Seattle",
+#     "WA",
+#     98115,
+#     123445678,
+#     "09-23-1992",
+#     "Developer",
+#     "04-21-2021",
+#     "05-12-2025",
+# )
 # create_current_emp_report()
-create_recent_departure_report()
-update_emp("employees.csv", "49225")
+# create_recent_departure_report()
+# update_emp("employees.csv", "49225")
+
+
+def main():
+    while True:
+        response = input(menu)
+        if response == "1":
+            add_new_emp()
+        if response == "2":
+            update_emp()
+        if response == "3":
+            create_current_emp_report()
+        if response == "4":
+            verify = input("Would you like to quit (yes/no)?")
+            if verify == "no":
+                continue
+            if verify == "yes":
+                print("Thank you for visiting!")
+            break
+
+
+if __name__ == "__main__":
+    main()
