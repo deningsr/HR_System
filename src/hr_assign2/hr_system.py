@@ -175,12 +175,13 @@ def update_emp():
     #     "employees.csv", index_col=0, header=None, squeeze=True
     # ).to_dict()
     # print(new_dict)
-
+    csv_file = "employees.csv"
+    file_exists = os.path.isfile(csv_file)
     try:
         with open("employees.csv", "r") as file:
             readData = [row for row in csv.DictReader(file)]
 
-        with open("employees.csv", "w") as file:
+        with open("employees.csv", "a") as file:
             dict_writer = csv.DictWriter(
                 file,
                 fieldnames=[
@@ -198,12 +199,14 @@ def update_emp():
                     "End Date",
                 ],
             )
-            dict_writer.writerows(readData)
             for row in readData:
                 if row["ID"] == ID:
                     row[updated_field] = updated_value
                     print(readData)
-                    dict_writer.writerow(readData)
+
+                    if not file_exists:
+                        dict_writer.writeheader()
+                    dict_writer.writerow(row)
 
     except FileNotFoundError:
         print("file not found")
