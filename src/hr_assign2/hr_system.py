@@ -133,13 +133,17 @@ def add_new_emp():
         "Hire Date": parsed_hire_date,
         "End Date": parsed_end_date,
     }
-    file_exists = os.path.isfile("employees.csv")
-    with open("employees.csv", "a+", newline="") as file:
-        field_names = [emp for emp in employees]
-        dict_writer = csv.DictWriter(file, fieldnames=field_names)
-        if not file_exists:
-            dict_writer.writeheader()
-        dict_writer.writerow(employees)
+    csv_file = "employees.csv"
+    file_exists = os.path.isfile(csv_file)
+    try:
+        with open("employees.csv", "a+", newline="") as file:
+            field_names = [emp for emp in employees]
+            dict_writer = csv.DictWriter(file, fieldnames=field_names)
+            if not file_exists:
+                dict_writer.writeheader()
+            dict_writer.writerow(employees)
+    except IOError:
+        print("I/O error")
 
 
 def update_emp():
@@ -171,15 +175,18 @@ def update_emp():
     #     "employees.csv", index_col=0, header=None, squeeze=True
     # ).to_dict()
     # print(new_dict)
-    with open("employees.csv", "a+") as file:
-        readData = [row for row in csv.DictReader(file)]
-        print(readData)
-        for row in readData:
-            print(row)
-            if row["ID"] == ID:
-                row[updated_field] = updated_value
+    try:
+        with open("employees.csv", "a+", newline="") as file:
+            readData = [row for row in csv.DictReader(file)]
+            print(readData)
+            for row in readData:
                 print(row)
-                # dict.writerow(row)
+                if row["ID"] == ID:
+                    row[updated_field] = updated_value
+                    print(row)
+                    # dict.writerow(row)
+    except FileNotFoundError:
+        print("file not found")
 
 
 def create_current_emp_report():
