@@ -1,7 +1,9 @@
 import uuid
 import csv
-import os.path
+import os
 import datetime
+from tkinter import messagebox
+import pandas as pd
 
 menu = "\n".join(
     (
@@ -10,7 +12,8 @@ menu = "\n".join(
         "1 - Add a New Employee",
         "2 - Update an Employee Record",
         "3 - See All Current Employed Employees",
-        "4 - quit",
+        "4 - See Recently Terminated Employees",
+        "5 - quit",
         ">>> ",
     )
 )
@@ -23,53 +26,83 @@ def add_new_emp():
         except ValueError:
             print("Please enter a name")
             continue
+        else:
+            break
+    while True:
         try:
             last_name = str(input("Enter Last Name: "))
         except ValueError:
             print("Please enter a name")
             continue
+        else:
+            break
+    while True:
         try:
             address = str(input("Enter Address: "))
         except ValueError:
             print("Please enter an Address")
             continue
+        else:
+            break
+    while True:
         try:
             city = str(input("Enter a City: "))
         except ValueError:
             print("Please enter a name")
             continue
+        else:
+            break
+    while True:
         try:
             state = str(input("Enter State Abb: "))
         except ValueError:
             print("Please enter a State")
             continue
+        else:
+            break
+    while True:
         try:
             zipcode = str(input("Enter zipcode: "))
         except ValueError:
             print("Please enter a zipcode")
             continue
+        else:
+            break
+    while True:
         try:
             ssn = str(input("Enter SSN: "))
         except ValueError:
             print("Please enter a SSN")
             continue
+        else:
+            break
+    while True:
         try:
             dob = str(input("Enter DOB (MM-DD-YYYY): "))
         except ValueError:
             print("Please enter a date")
             continue
+        else:
+            break
+    while True:
         try:
             job_title = str(input("Enter a Job Title: "))
         except ValueError:
             print("Please enter a title")
             continue
+        else:
+            break
+    while True:
         try:
             hire_date = str(input("Enter Hire Date (MM-DD-YYYY): "))
         except ValueError:
             print("Please enter a date")
             continue
+        else:
+            break
+    while True:
         try:
-            end_date = str(input("Enter DOB (MM-DD-YYYY): "))
+            end_date = str(input("Enter Termination Date (MM-DD-YYYY): "))
         except ValueError:
             print("Please enter a date")
             continue
@@ -109,14 +142,44 @@ def add_new_emp():
         dict_writer.writerow(employees)
 
 
-def update_emp(filename, ID, **kwargs):
-    with open(filename, newline="") as file:
+def update_emp():
+    while True:
+        try:
+            ID = str(input("Enter ID of employee you want to update:"))
+        except ValueError:
+            print("Please enter an ID")
+            continue
+        else:
+            break
+    while True:
+        try:
+            updated_field = str(input("What field would you like to update?:"))
+        except ValueError:
+            print("Please enter a valid field")
+            continue
+        else:
+            break
+    while True:
+        try:
+            updated_value = str(input("What is the new value?:"))
+        except ValueError:
+            print("Please enter a valid value")
+            continue
+        else:
+            break
+    # new_dict = pd.read_csv(
+    #     "employees.csv", index_col=0, header=None, squeeze=True
+    # ).to_dict()
+    # print(new_dict)
+    with open("employees.csv", "a+") as file:
         readData = [row for row in csv.DictReader(file)]
-        # print(readData)
+        print(readData)
         for row in readData:
+            print(row)
             if row["ID"] == ID:
-                print("Updating employee ID: " + ID)
-                row[kwargs] = kwargs
+                row[updated_field] = updated_value
+                print(row)
+                # dict.writerow(row)
 
 
 def create_current_emp_report():
@@ -144,6 +207,21 @@ def create_current_emp_report():
             )
 
 
+def send_review_alerts():
+    with open("employees.csv", newline="") as file:
+        readData = [row for row in csv.DictReader(file)]
+
+        for row in readData:
+            past_date = row["Hire Date"] + str(datetime.timedelta(days=-90))
+            if row["Hire Date"] >= past_date:
+                messagebox.showinfo(
+                    "Remember to schedule reviews with the following employees:",
+                    row["First Name"],
+                )
+            else:
+                messagebox.showinfo("No upcoming reviews at this time", "Test")
+
+
 def create_recent_departure_report():
     with open("employees.csv", newline="") as file:
         readData = [row for row in csv.DictReader(file)]
@@ -154,7 +232,7 @@ def create_recent_departure_report():
                 month=int(row["Hire Date"][1]),
                 day=int(row["Hire Date"][3:5]),
             )
-            past_date = parsed_hire_date + datetime.timedelta(days=-31)
+            past_date = parsed_hire_date + datetime.timedelta(months=-1)
 
             if row["Hire Date"] >= past_date:
                 sorted_list.append(row)
@@ -235,6 +313,7 @@ def create_recent_departure_report():
 
 
 def main():
+    # send_review_alerts()
     while True:
         response = input(menu)
         if response == "1":
@@ -244,6 +323,8 @@ def main():
         if response == "3":
             create_current_emp_report()
         if response == "4":
+            create_recent_departure_report()
+        if response == "5":
             verify = input("Would you like to quit (yes/no)?")
             if verify == "no":
                 continue
