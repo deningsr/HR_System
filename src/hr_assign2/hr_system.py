@@ -124,7 +124,7 @@ def add_new_emp():
         "First Name": first_nane,
         "Last Name": last_name,
         "Address": address,
-        "city": city,
+        "City": city,
         "State": state,
         "Zip": zipcode,
         "SSN": ssn,
@@ -175,16 +175,36 @@ def update_emp():
     #     "employees.csv", index_col=0, header=None, squeeze=True
     # ).to_dict()
     # print(new_dict)
+
     try:
-        with open("employees.csv", "a+", newline="") as file:
+        with open("employees.csv", "r") as file:
             readData = [row for row in csv.DictReader(file)]
-            print(readData)
+
+        with open("employees.csv", "w") as file:
+            dict_writer = csv.DictWriter(
+                file,
+                fieldnames=[
+                    "ID",
+                    "First Name",
+                    "Last Name",
+                    "Address",
+                    "City",
+                    "State",
+                    "Zip",
+                    "SSN",
+                    "DOB",
+                    "Job Title",
+                    "Hire Date",
+                    "End Date",
+                ],
+            )
+            dict_writer.writerows(readData)
             for row in readData:
-                print(row)
                 if row["ID"] == ID:
                     row[updated_field] = updated_value
-                    print(row)
-                    # dict.writerow(row)
+                    print(readData)
+                    dict_writer.writerow(readData)
+
     except FileNotFoundError:
         print("file not found")
 
@@ -257,66 +277,6 @@ def create_recent_departure_report():
                     key["ID"], key["First Name"], key["Last Name"]
                 )
             )
-
-
-# add_new_emp(
-#     "Denin",
-#     "Grcic",
-#     "123 3rd St",
-#     "Seattle",
-#     "WA",
-#     98115,
-#     123445678,
-#     "09-23-1992",
-#     "Developer",
-#     "04-21-2021",
-#     "05-20-2021",
-# )
-
-# add_new_emp(
-#     "Will",
-#     "Smith",
-#     "123 3rd St",
-#     "Seattle",
-#     "WA",
-#     98115,
-#     123445678,
-#     "09-23-1992",
-#     "Developer",
-#     "04-21-2021",
-#     "05-12-2021",
-# )
-
-# add_new_emp(
-#     "Polly",
-#     "Moon",
-#     "123 3rd St",
-#     "Seattle",
-#     "WA",
-#     98115,
-#     123445678,
-#     "09-23-1992",
-#     "Developer",
-#     "04-21-2021",
-#     "05-12-2040",
-# )
-
-# add_new_emp(
-#     "Peter",
-#     "Griffin",
-#     "123 3rd St",
-#     "Seattle",
-#     "WA",
-#     98115,
-#     123445678,
-#     "09-23-1992",
-#     "Developer",
-#     "04-21-2021",
-#     "05-12-2025",
-# )
-# create_current_emp_report()
-# create_recent_departure_report()
-# update_emp("employees.csv", "49225")
 
 
 def main():
