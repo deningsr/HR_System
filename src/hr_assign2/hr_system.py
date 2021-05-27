@@ -19,6 +19,19 @@ menu = "\n".join(
 )
 
 
+def generate_unique_id():
+    unique_id = str(uuid.uuid4().fields[-1])[:5]
+    return unique_id
+
+
+def sort_reports(sorted_list):
+    sorted_list_of_dicts = []
+    for row in sorted_list:
+        sorted_list_of_dicts.append(row)
+    sortedList = sorted(sorted_list, key=lambda row: row["ID"], reverse=True)
+    return sortedList
+
+
 def add_new_emp():
     while True:
         try:
@@ -66,7 +79,7 @@ def add_new_emp():
             if len(zipcode) != 5:
                 raise ValueError
         except ValueError:
-            print("Please enter a zipcode")
+            print("zipcode must be 5 digits")
             continue
         else:
             break
@@ -76,7 +89,7 @@ def add_new_emp():
             if len(ssn) != 9:
                 raise ValueError
         except ValueError:
-            print("Please enter a SSN")
+            print("SSN must be 9 digits")
             continue
         else:
             break
@@ -112,16 +125,15 @@ def add_new_emp():
             continue
         else:
             break
+
     parsed_hire_date = datetime.datetime.strptime(hire_date, "%m-%d-%Y")
-    # parsed_hire_date = datetime.datetime(
-    #     year=int(hire_date[6:10]), month=int(hire_date[1]), day=int(hire_date[3:5])
-    # )
     parsed_end_date = datetime.datetime.strptime(end_date, "%m-%d-%Y")
     parsed_dob = datetime.datetime.strptime(dob, "%m-%d-%Y")
+
     employees = dict()
-    emp_id = str(uuid.uuid4().fields[-1])[:5]
+    # emp_id = str(uuid.uuid4().fields[-1])[:5]
     employees = {
-        "ID": emp_id,
+        "ID": generate_unique_id(),
         "First Name": first_nane,
         "Last Name": last_name,
         "Address": address,
@@ -221,7 +233,8 @@ def create_current_emp_report():
         for row in readData:
             if row["Hire Date"] <= row["End Date"]:
                 sorted_list.append(row)
-        sortedlist = sorted(sorted_list, key=lambda row: row["ID"], reverse=True)
+        # sort_reports(sorted_list)
+        # sortedlist = sorted(sorted_list, key=lambda row: row["ID"], reverse=True)
         print("Currently employed employees:")
         print(
             "{:20} {:>15} {:>20}".format(
@@ -230,7 +243,7 @@ def create_current_emp_report():
                 "Last Name",
             )
         )
-        for key in sortedlist:
+        for key in sort_reports(sorted_list):
             print(
                 "{:20} {:>15} {:>20}".format(
                     key["ID"], key["First Name"], key["Last Name"]
@@ -258,11 +271,11 @@ def create_recent_departure_report():
         readData = [row for row in csv.DictReader(file)]
         sorted_list = []
         for row in readData:
-            parsed_hire_date = datetime.datetime.strptime(
-                row["Hire Date"], "%m-%d-%Y %M:%S"
-            )
+            # parsed_hire_date = datetime.datetime.strptime(
+            #     row["Hire Date"], "%m-%d-%y %M:%S"
+            # )
 
-            past_date = parsed_hire_date + datetime.timedelta(days=-30)
+            past_date = row["Hire Date"] + datetime.timedelta(days=-30)
 
             if row["Hire Date"] >= past_date:
                 sorted_list.append(row)
