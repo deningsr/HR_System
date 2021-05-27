@@ -48,13 +48,13 @@ def add_new_emp():
         try:
             city = str(input("Enter a City: "))
         except ValueError:
-            print("Please enter a name")
+            print("Please enter city")
             continue
         else:
             break
     while True:
         try:
-            state = str(input("Enter State Abb: "))
+            state = str(input("Enter State Abb: ")).upper()
         except ValueError:
             print("Please enter a State")
             continue
@@ -63,6 +63,8 @@ def add_new_emp():
     while True:
         try:
             zipcode = str(input("Enter zipcode: "))
+            if len(zipcode) != 5:
+                raise ValueError
         except ValueError:
             print("Please enter a zipcode")
             continue
@@ -71,6 +73,8 @@ def add_new_emp():
     while True:
         try:
             ssn = str(input("Enter SSN: "))
+            if len(ssn) != 9:
+                raise ValueError
         except ValueError:
             print("Please enter a SSN")
             continue
@@ -108,15 +112,12 @@ def add_new_emp():
             continue
         else:
             break
-    parsed_hire_date = datetime.datetime(
-        year=int(hire_date[6:10]), month=int(hire_date[1]), day=int(hire_date[3:5])
-    )
-    parsed_end_date = datetime.datetime(
-        year=int(end_date[6:10]), month=int(end_date[1]), day=int(end_date[3:5])
-    )
-    parsed_dob = datetime.datetime(
-        year=int(dob[6:10]), month=int(dob[1]), day=int(dob[3:5])
-    )
+    parsed_hire_date = datetime.datetime.strptime(hire_date, "%m-%d-%Y")
+    # parsed_hire_date = datetime.datetime(
+    #     year=int(hire_date[6:10]), month=int(hire_date[1]), day=int(hire_date[3:5])
+    # )
+    parsed_end_date = datetime.datetime.strptime(end_date, "%m-%d-%Y")
+    parsed_dob = datetime.datetime.strptime(dob, "%m-%d-%Y")
     employees = dict()
     emp_id = str(uuid.uuid4().fields[-1])[:5]
     employees = {
@@ -257,12 +258,11 @@ def create_recent_departure_report():
         readData = [row for row in csv.DictReader(file)]
         sorted_list = []
         for row in readData:
-            parsed_hire_date = datetime.datetime(
-                year=int(row["Hire Date"][6:10]),
-                month=int(row["Hire Date"][1]),
-                day=int(row["Hire Date"][3:5]),
+            parsed_hire_date = datetime.datetime.strptime(
+                row["Hire Date"], "%m-%d-%Y %M:%S"
             )
-            past_date = parsed_hire_date + datetime.timedelta(months=-1)
+
+            past_date = parsed_hire_date + datetime.timedelta(days=-30)
 
             if row["Hire Date"] >= past_date:
                 sorted_list.append(row)
