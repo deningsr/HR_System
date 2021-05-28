@@ -162,7 +162,7 @@ def add_new_emp():
     csv_file = "employees.csv"
     file_exists = os.path.isfile(csv_file)
     try:
-        with open(csv_file, "a+", newline="\n") as file:
+        with open(csv_file, "a") as file:
             field_names = [emp for emp in employees]
             dict_writer = csv.DictWriter(file, fieldnames=field_names)
             if not file_exists:
