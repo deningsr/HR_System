@@ -32,6 +32,19 @@ def sort_reports(sorted_list):
     return sortedList
 
 
+def update_row(readData, ID, new_field, new_value):
+    for row in readData:
+        if row["ID"] == ID:
+            row[new_field] = new_value
+    return row
+
+
+def write_new_row(dict_writer, file, row):
+    if not file:
+        dict_writer.writeheader()
+    return dict_writer.writerow(row)
+
+
 def add_new_emp():
     while True:
         try:
@@ -149,7 +162,7 @@ def add_new_emp():
     csv_file = "employees.csv"
     file_exists = os.path.isfile(csv_file)
     try:
-        with open("employees.csv", "a+", newline="") as file:
+        with open(csv_file, "a+", newline="\n") as file:
             field_names = [emp for emp in employees]
             dict_writer = csv.DictWriter(file, fieldnames=field_names)
             if not file_exists:
@@ -212,6 +225,7 @@ def update_emp():
                     "End Date",
                 ],
             )
+
             for row in readData:
                 if row["ID"] == ID:
                     row[updated_field] = updated_value
@@ -220,6 +234,7 @@ def update_emp():
                     if not file_exists:
                         dict_writer.writeheader()
                     dict_writer.writerow(row)
+                    break
 
     except FileNotFoundError:
         print("file not found")
@@ -279,7 +294,7 @@ def create_recent_departure_report():
 
             if row["Hire Date"] >= past_date:
                 sorted_list.append(row)
-        sortedlist = sorted(sorted_list, key=lambda row: row["ID"], reverse=True)
+
         print(
             "{:20} {:>15} {:>20}".format(
                 "ID",
@@ -287,7 +302,7 @@ def create_recent_departure_report():
                 "Last Name",
             )
         )
-        for key in sortedlist:
+        for key in sort_reports(sorted_list):
             print(
                 "{:20} {:>15} {:>20}".format(
                     key["ID"], key["First Name"], key["Last Name"]
