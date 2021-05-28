@@ -291,8 +291,9 @@ def create_recent_departure_report():
             parsed_end_date = datetime.datetime.strptime(
                 row["End Date"], "%Y-%m-%d %H:%M:%S"
             )
+            past_date = now + datetime.timedelta(days=-30)
 
-            if parsed_end_date <= (now + datetime.timedelta(days=-30)):
+            if (parsed_end_date >= past_date) and (parsed_end_date <= now):
                 sorted_list.append(row)
 
         print(
