@@ -286,13 +286,13 @@ def create_recent_departure_report():
         readData = [row for row in csv.DictReader(file)]
         sorted_list = []
         for row in readData:
-            # parsed_hire_date = datetime.datetime.strptime(
-            #     row["Hire Date"], "%m-%d-%y %M:%S"
-            # )
+            parsed_hire_date = datetime.datetime.strptime(
+                row["Hire Date"], "%Y-%m-%d %H:%M:%S"
+            )
 
-            past_date = row["Hire Date"] + datetime.timedelta(days=-30)
+            past_date = parsed_hire_date + datetime.timedelta(days=-30)
 
-            if row["Hire Date"] >= past_date:
+            if parsed_hire_date >= past_date:
                 sorted_list.append(row)
 
         print(
