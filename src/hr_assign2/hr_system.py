@@ -207,7 +207,7 @@ def update_emp():
         with open("employees.csv", "r") as file:
             readData = [row for row in csv.DictReader(file)]
 
-        with open("employees.csv", "a") as file:
+        with open("employees.csv", "w") as file:
             dict_writer = csv.DictWriter(
                 file,
                 fieldnames=[
@@ -225,16 +225,14 @@ def update_emp():
                     "End Date",
                 ],
             )
-
+            dict_writer.writeheader()
             for row in readData:
                 if row["ID"] == ID:
                     row[updated_field] = updated_value
-                    print(readData)
 
-                    if not file_exists:
-                        dict_writer.writeheader()
-                    dict_writer.writerow(row)
-                    break
+                    # if not file_exists:
+                    #     dict_writer.writeheader()
+                dict_writer.writerow(row)
 
     except FileNotFoundError:
         print("file not found")
