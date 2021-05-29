@@ -32,6 +32,24 @@ def sort_reports(sorted_list):
     return sortedList
 
 
+def list_current_employees(readData):
+    current_emps = []
+    now = datetime.datetime.now()
+
+    for row in readData:
+        parsed_end_date = datetime.datetime.strptime(
+            row["End Date"], "%Y-%m-%d %H:%M:%S"
+        )
+        if parsed_end_date > now:
+            current_emps.append(row)
+    return current_emps
+
+
+def parse_date(date):
+    parsed_date = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+    return parsed_date
+
+
 def update_row(readData, ID, new_field, new_value):
     for row in readData:
         if row["ID"] == ID:
@@ -144,7 +162,6 @@ def add_new_emp():
     parsed_dob = datetime.datetime.strptime(dob, "%m-%d-%Y")
 
     employees = dict()
-    # emp_id = str(uuid.uuid4().fields[-1])[:5]
     employees = {
         "ID": generate_unique_id(),
         "First Name": first_nane,
@@ -197,10 +214,7 @@ def update_emp():
             continue
         else:
             break
-    # new_dict = pd.read_csv(
-    #     "employees.csv", index_col=0, header=None, squeeze=True
-    # ).to_dict()
-    # print(new_dict)
+
     csv_file = "employees.csv"
     file_exists = os.path.isfile(csv_file)
     try:
@@ -242,12 +256,12 @@ def create_current_emp_report():
     with open("employees.csv", newline="") as file:
         readData = [row for row in csv.DictReader(file)]
 
-        sorted_list = []
-        for row in readData:
-            if row["Hire Date"] <= row["End Date"]:
-                sorted_list.append(row)
-        # sort_reports(sorted_list)
-        # sortedlist = sorted(sorted_list, key=lambda row: row["ID"], reverse=True)
+        # sorted_list = []
+        # for row in readData:
+        # list_current_employees(readData)
+        # if row["Hire Date"] <= row["End Date"]:
+        #     sorted_list.append(row)
+
         print("Currently employed employees:")
         print(
             "{:20} {:>15} {:>20}".format(
@@ -256,7 +270,7 @@ def create_current_emp_report():
                 "Last Name",
             )
         )
-        for key in sort_reports(sorted_list):
+        for key in sort_reports(list_current_employees(readData)):
             print(
                 "{:20} {:>15} {:>20}".format(
                     key["ID"], key["First Name"], key["Last Name"]
