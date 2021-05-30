@@ -2,8 +2,8 @@ import uuid
 import csv
 import os
 import datetime
-from tkinter import messagebox
-import pandas as pd
+import tkinter as tk
+from tkinter import ttk
 
 menu = "\n".join(
     (
@@ -22,6 +22,17 @@ menu = "\n".join(
 def generate_unique_id():
     unique_id = str(uuid.uuid4().fields[-1])[:5]
     return unique_id
+
+
+def popupmsg(msg):
+    NORM_FONT = ("Verdana", 10)
+    popup = tk.Tk()
+    popup.wm_title("!")
+    label = ttk.Label(popup, text=msg, font=NORM_FONT)
+    label.pack(side="top", fill="x", pady=10)
+    B1 = ttk.Button(popup, text="Okay", command=popup.destroy)
+    B1.pack()
+    popup.mainloop()
 
 
 def sort_reports(sorted_list):
@@ -290,9 +301,12 @@ def send_review_alerts():
             )
             past_date = now + datetime.timedelta(days=-90)
 
-            if (parsed_hire_date >= past_date) and (parsed_hire_date <= now):
+            if (parsed_hire_date.month >= past_date.month) and (
+                parsed_hire_date.month <= now.month
+            ):
                 sorted_list.append(row["First Name"])
-        messagebox.showinfo("Reviews", sorted_list)
+        print(sorted_list)
+        popupmsg("Schedule reviews with the following: " + ",".join(sorted_list))
 
 
 def create_recent_departure_report():
