@@ -38,7 +38,7 @@ def list_current_employees(readData):
 
     for row in readData:
         parsed_end_date = datetime.datetime.strptime(
-            row["End Date"], "%m-%d-%Y %H:%M:%S"
+            row["End Date"], "%Y-%m-%d %H:%M:%S"
         )
         if parsed_end_date > now:
             current_emps.append(row)
@@ -253,7 +253,7 @@ def update_emp():
 
 
 def create_current_emp_report():
-    with open("employees.csv", newline="") as file:
+    with open("employees.csv", "r", newline="") as file:
         readData = [row for row in csv.DictReader(file)]
 
         # sorted_list = []
@@ -285,14 +285,14 @@ def send_review_alerts():
         for row in readData:
             now = datetime.datetime.now()
 
-            # parsed_hire_date = datetime.datetime.strptime(
-            #     row["Hire Date"], "%d-%m-%y %H:%M:%S"
-            # )
+            parsed_hire_date = datetime.datetime.strptime(
+                row["Hire Date"], "%Y-%m-%d %H:%M:%S"
+            )
             past_date = now + datetime.timedelta(days=-90)
 
-            if (row["Hire Date"] >= past_date) and (row["Hire Date"] <= now):
+            if (parsed_hire_date >= past_date) and (parsed_hire_date <= now):
                 sorted_list.append(row["First Name"])
-        messagebox.showinfo("Reviews", "\n".join(sorted_list))
+        messagebox.showinfo("Reviews", sorted_list)
 
 
 def create_recent_departure_report():
@@ -326,7 +326,7 @@ def create_recent_departure_report():
 
 
 def main():
-    # send_review_alerts()
+    send_review_alerts()
     while True:
         response = input(menu)
         if response == "1":
