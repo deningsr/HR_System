@@ -56,6 +56,23 @@ def list_current_employees(readData):
     return current_emps
 
 
+def list_recent_departures(readData):
+    recent_departures = []
+    now = datetime.datetime.now()
+
+    for row in readData:
+        now = datetime.datetime.now()
+
+        parsed_end_date = datetime.datetime.strptime(
+            row["End Date"], "%Y-%m-%d %H:%M:%S"
+        )
+        past_date = now + datetime.timedelta(days=-30)
+
+        if (parsed_end_date >= past_date) and (parsed_end_date <= now):
+            recent_departures.append(row)
+    return recent_departures
+
+
 def parse_date(date):
     parsed_date = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
     return parsed_date
@@ -267,12 +284,6 @@ def create_current_emp_report():
     with open("employees.csv", "r", newline="") as file:
         readData = [row for row in csv.DictReader(file)]
 
-        # sorted_list = []
-        # for row in readData:
-        # list_current_employees(readData)
-        # if row["Hire Date"] <= row["End Date"]:
-        #     sorted_list.append(row)
-
         print("Currently employed employees:")
         print(
             "{:20} {:>15} {:>20}".format(
@@ -312,18 +323,8 @@ def send_review_alerts():
 def create_recent_departure_report():
     with open("employees.csv", newline="") as file:
         readData = [row for row in csv.DictReader(file)]
-        sorted_list = []
-        for row in readData:
-            now = datetime.datetime.now()
 
-            parsed_end_date = datetime.datetime.strptime(
-                row["End Date"], "%Y-%m-%d %H:%M:%S"
-            )
-            past_date = now + datetime.timedelta(days=-30)
-
-            if (parsed_end_date >= past_date) and (parsed_end_date <= now):
-                sorted_list.append(row)
-
+        print("Recently terminated employees:")
         print(
             "{:20} {:>15} {:>20}".format(
                 "ID",
@@ -331,7 +332,7 @@ def create_recent_departure_report():
                 "Last Name",
             )
         )
-        for key in sort_reports(sorted_list):
+        for key in sort_reports(list_recent_departures(readData)):
             print(
                 "{:20} {:>15} {:>20}".format(
                     key["ID"], key["First Name"], key["Last Name"]
