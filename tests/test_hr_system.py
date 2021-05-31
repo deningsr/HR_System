@@ -66,3 +66,12 @@ def test_list_recent_departures():
         {"ID": "5000", "Name": "John", "End Date": "2021-05-01 00:00:00"},
         {"ID": "4500", "Name": "Steve", "End Date": "2021-04-30 00:00:00"},
     ]
+
+
+def test_list_employees_for_review():
+    readData = [
+        {"ID": "5000", "First Name": "John", "Hire Date": "2021-03-01 00:00:00"},
+        {"ID": "4500", "First Name": "Steve", "Hire Date": "2021-10-30 00:00:00"},
+        {"ID": "7000", "First Name": "Judy", "Hire Date": "2019-04-11 00:00:00"},
+    ]
+    assert hr_assign2.hr_system.list_employees_for_review(readData) == ["John", "Judy"]
