@@ -5,6 +5,60 @@ import datetime
 import tkinter as tk
 from tkinter import ttk
 
+state_abbs = [
+    "AL",
+    "AK",
+    "AZ",
+    "AR",
+    "CA",
+    "CO",
+    "CT",
+    "DE",
+    "DC",
+    "FL",
+    "GA",
+    "HI",
+    "ID",
+    "IL",
+    "IN",
+    "IA",
+    "KS",
+    "KY",
+    "LA",
+    "ME",
+    "MD",
+    "MA",
+    "MI",
+    "MN",
+    "MS",
+    "MO",
+    "MT",
+    "NE",
+    "NV",
+    "NH",
+    "NJ",
+    "NM",
+    "NY",
+    "NC",
+    "ND",
+    "OH",
+    "OK",
+    "OR",
+    "PA",
+    "RI",
+    "SC",
+    "SD",
+    "TN",
+    "TX",
+    "UT",
+    "VT",
+    "VA",
+    "WA",
+    "WV",
+    "WI",
+    "WY",
+]
+
 menu = "\n".join(
     (
         "Welcome to the HR System!",
@@ -66,11 +120,28 @@ def list_recent_departures(readData):
         parsed_end_date = datetime.datetime.strptime(
             row["End Date"], "%Y-%m-%d %H:%M:%S"
         )
-        past_date = now + datetime.timedelta(days=-30)
+        past_date = now + datetime.timedelta(days=-31)
 
         if (parsed_end_date >= past_date) and (parsed_end_date <= now):
             recent_departures.append(row)
     return recent_departures
+
+
+def list_employees_for_review(readData):
+    sorted_list = []
+    for row in readData:
+        now = datetime.datetime.now()
+
+        parsed_hire_date = datetime.datetime.strptime(
+            row["Hire Date"], "%Y-%m-%d %H:%M:%S"
+        )
+        past_date = now + datetime.timedelta(days=-90)
+
+        if (parsed_hire_date.month >= past_date.month) and (
+            parsed_hire_date.month <= now.month
+        ):
+            sorted_list.append(row["First Name"])
+    return sorted_list
 
 
 def parse_date(date):
@@ -127,6 +198,8 @@ def add_new_emp():
     while True:
         try:
             state = str(input("Enter State Abb: ")).upper()
+            if (len(state) != 2) or (state not in state_abbs):
+                raise ValueError
         except ValueError:
             print("Please enter a State")
             continue
@@ -243,8 +316,8 @@ def update_emp():
         else:
             break
 
-    csv_file = "employees.csv"
-    file_exists = os.path.isfile(csv_file)
+    # csv_file = "employees.csv"
+    # file_exists = os.path.isfile(csv_file)
     try:
         with open("employees.csv", "r") as file:
             readData = [row for row in csv.DictReader(file)]
@@ -303,21 +376,11 @@ def create_current_emp_report():
 def send_review_alerts():
     with open("employees.csv", "r", newline="") as file:
         readData = [row for row in csv.DictReader(file)]
-        sorted_list = []
-        for row in readData:
-            now = datetime.datetime.now()
 
-            parsed_hire_date = datetime.datetime.strptime(
-                row["Hire Date"], "%Y-%m-%d %H:%M:%S"
-            )
-            past_date = now + datetime.timedelta(days=-90)
-
-            if (parsed_hire_date.month >= past_date.month) and (
-                parsed_hire_date.month <= now.month
-            ):
-                sorted_list.append(row["First Name"])
-        print(sorted_list)
-        popupmsg("Schedule reviews with the following: " + ",".join(sorted_list))
+        popupmsg(
+            "Schedule reviews with the following: "
+            + ",".join(list_recent_departures(readData))
+        )
 
 
 def create_recent_departure_report():
